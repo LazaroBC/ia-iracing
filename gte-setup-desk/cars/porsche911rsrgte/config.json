@@ -1,0 +1,147 @@
+{
+  "key": "porsche",
+  "name": "Porsche 911 RSR GTE",
+  "exact": false,
+  "motorGroups": [
+    {
+      "title": "Brakes & differential (aproximado)",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "brakeBias",
+          "label": "Brake pressure bias",
+          "unit": "%",
+          "type": "number",
+          "min": 52,
+          "max": 62,
+          "step": 0.5,
+          "def": 56
+        },
+        {
+          "id": "brakePressure",
+          "label": "Brake pressure",
+          "unit": "%",
+          "type": "number",
+          "min": 80,
+          "max": 100,
+          "step": 1,
+          "def": 96
+        },
+        {
+          "id": "diffPreload",
+          "label": "Diff preload",
+          "unit": "Nm",
+          "type": "number",
+          "min": 20,
+          "max": 100,
+          "step": 5,
+          "def": 50
+        },
+        {
+          "id": "diffPower",
+          "label": "Diff power lock",
+          "unit": "%",
+          "type": "number",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "def": 45
+        },
+        {
+          "id": "diffCoast",
+          "label": "Diff coast lock",
+          "unit": "%",
+          "type": "number",
+          "min": 0,
+          "max": 60,
+          "step": 5,
+          "def": 20
+        }
+      ]
+    },
+    {
+      "title": "In-car dials (aproximado)",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "tc",
+          "label": "Traction control",
+          "unit": "level",
+          "type": "number",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "def": 3
+        }
+      ]
+    }
+  ],
+  "aeroGroups": [
+    {
+      "title": "Suspension & aero (aproximado)",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "rideHeightF",
+          "label": "Ride height (front)",
+          "unit": "mm",
+          "type": "number",
+          "min": 50,
+          "max": 75,
+          "step": 1,
+          "def": 58
+        },
+        {
+          "id": "rideHeightR",
+          "label": "Ride height (rear)",
+          "unit": "mm",
+          "type": "number",
+          "min": 60,
+          "max": 90,
+          "step": 1,
+          "def": 72
+        },
+        {
+          "id": "wingAngle",
+          "label": "Wing setting",
+          "unit": "deg",
+          "type": "number",
+          "min": 0,
+          "max": 10,
+          "step": 0.5,
+          "def": 4
+        },
+        {
+          "id": "arbF",
+          "label": "ARB (front)",
+          "unit": "level",
+          "type": "number",
+          "min": 1,
+          "max": 8,
+          "step": 1,
+          "def": 5
+        },
+        {
+          "id": "arbR",
+          "label": "ARB (rear)",
+          "unit": "level",
+          "type": "number",
+          "min": 1,
+          "max": 8,
+          "step": 1,
+          "def": 4
+        },
+        {
+          "id": "toeF",
+          "label": "Toe-in (front)",
+          "unit": "deg",
+          "type": "number",
+          "min": -0.2,
+          "max": 0.2,
+          "step": 0.05,
+          "def": -0.05
+        }
+      ]
+    }
+  ]
+}

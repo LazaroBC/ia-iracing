@@ -1,0 +1,705 @@
+{
+  "key": "ferrari",
+  "name": "Ferrari 488 GTE",
+  "exact": true,
+  "motorGroups": [
+    {
+      "title": "Differential",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "diffCoastRamp",
+          "label": "Diff coast ramp angle",
+          "unit": "deg",
+          "type": "number",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "def": 40
+        },
+        {
+          "id": "diffDriveRamp",
+          "label": "Diff drive ramp angle",
+          "unit": "deg",
+          "type": "number",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "def": 60
+        },
+        {
+          "id": "clutchPlates",
+          "label": "Clutch plates",
+          "unit": "",
+          "type": "number",
+          "min": 4,
+          "max": 12,
+          "step": 1,
+          "def": 6
+        },
+        {
+          "id": "preload",
+          "label": "Preload",
+          "unit": "Nm",
+          "type": "number",
+          "min": 20,
+          "max": 200,
+          "step": 5,
+          "def": 110
+        }
+      ]
+    },
+    {
+      "title": "Gear ratios (pasos aproximados)",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "finalDrive",
+          "label": "Final drive",
+          "unit": "",
+          "type": "number",
+          "min": 2,
+          "max": 5,
+          "step": 0.05,
+          "def": 2.455
+        },
+        {
+          "id": "gear1",
+          "label": "First gear",
+          "unit": "",
+          "type": "number",
+          "min": 2,
+          "max": 4,
+          "step": 0.02,
+          "def": 3.083
+        },
+        {
+          "id": "gear2",
+          "label": "Second gear",
+          "unit": "",
+          "type": "number",
+          "min": 1.6,
+          "max": 3,
+          "step": 0.02,
+          "def": 2.333
+        },
+        {
+          "id": "gear3",
+          "label": "Third gear",
+          "unit": "",
+          "type": "number",
+          "min": 1.2,
+          "max": 2.4,
+          "step": 0.02,
+          "def": 1.83
+        },
+        {
+          "id": "gear4",
+          "label": "Fourth gear",
+          "unit": "",
+          "type": "number",
+          "min": 1,
+          "max": 2,
+          "step": 0.02,
+          "def": 1.579
+        },
+        {
+          "id": "gear5",
+          "label": "Fifth gear",
+          "unit": "",
+          "type": "number",
+          "min": 0.9,
+          "max": 1.8,
+          "step": 0.02,
+          "def": 1.381
+        },
+        {
+          "id": "gear6",
+          "label": "Sixth gear",
+          "unit": "",
+          "type": "number",
+          "min": 0.8,
+          "max": 1.6,
+          "step": 0.02,
+          "def": 1.217
+        }
+      ]
+    },
+    {
+      "title": "Brakes",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "brakeBias",
+          "label": "Brake pressure bias",
+          "unit": "%",
+          "type": "number",
+          "min": 45,
+          "max": 65,
+          "step": 0.5,
+          "def": 51
+        },
+        {
+          "id": "frontMasterCyl",
+          "label": "Front master cyl.",
+          "unit": "mm",
+          "type": "number",
+          "min": 16,
+          "max": 26,
+          "step": 0.1,
+          "def": 20.6
+        },
+        {
+          "id": "rearMasterCyl",
+          "label": "Rear master cyl.",
+          "unit": "mm",
+          "type": "number",
+          "min": 16,
+          "max": 26,
+          "step": 0.1,
+          "def": 20.6
+        },
+        {
+          "id": "brakePads",
+          "label": "Brake pads",
+          "type": "select",
+          "options": [
+            "Low friction",
+            "Medium friction",
+            "High friction"
+          ],
+          "def": "Medium friction"
+        }
+      ]
+    },
+    {
+      "title": "In-car dials (electronics)",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "tc1",
+          "label": "Traction control setting 1 (TC1)",
+          "unit": "",
+          "type": "number",
+          "min": 0,
+          "max": 11,
+          "step": 1,
+          "def": 3
+        },
+        {
+          "id": "tc2",
+          "label": "Traction control setting 2 (TC2)",
+          "unit": "",
+          "type": "number",
+          "min": 0,
+          "max": 11,
+          "step": 1,
+          "def": 4
+        },
+        {
+          "id": "engineMap",
+          "label": "Engine map setting (MIX)",
+          "unit": "",
+          "type": "number",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "def": 1
+        },
+        {
+          "id": "throttleShape",
+          "label": "Throttle shape setting (MAP)",
+          "unit": "",
+          "type": "number",
+          "min": 1,
+          "max": 6,
+          "step": 1,
+          "def": 1
+        }
+      ]
+    },
+    {
+      "title": "Fuel",
+      "color": "var(--motor)",
+      "fields": [
+        {
+          "id": "fuelLevel",
+          "label": "Fuel level",
+          "unit": "L",
+          "type": "number",
+          "min": 5,
+          "max": 100,
+          "step": 0.5,
+          "def": 45
+        }
+      ]
+    }
+  ],
+  "aeroGroups": [
+    {
+      "title": "Tire type & starting pressures",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "tireType",
+          "label": "Tire type",
+          "type": "select",
+          "options": [
+            "Dry",
+            "Wet"
+          ],
+          "def": "Dry"
+        },
+        {
+          "id": "lfPressure",
+          "label": "LF Starting pressure",
+          "unit": "kPa",
+          "type": "number",
+          "min": 100,
+          "max": 250,
+          "step": 1,
+          "def": 162
+        },
+        {
+          "id": "rfPressure",
+          "label": "RF Starting pressure",
+          "unit": "kPa",
+          "type": "number",
+          "min": 100,
+          "max": 250,
+          "step": 1,
+          "def": 162
+        },
+        {
+          "id": "lrPressure",
+          "label": "LR Starting pressure",
+          "unit": "kPa",
+          "type": "number",
+          "min": 100,
+          "max": 250,
+          "step": 1,
+          "def": 159
+        },
+        {
+          "id": "rrPressure",
+          "label": "RR Starting pressure",
+          "unit": "kPa",
+          "type": "number",
+          "min": 100,
+          "max": 250,
+          "step": 1,
+          "def": 159
+        }
+      ]
+    },
+    {
+      "title": "Aero balance calc",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "frontRHspeed",
+          "label": "Front RH at speed",
+          "unit": "mm",
+          "type": "number",
+          "min": 20,
+          "max": 80,
+          "step": 1,
+          "def": 49
+        },
+        {
+          "id": "rearRHspeed",
+          "label": "Rear RH at speed",
+          "unit": "mm",
+          "type": "number",
+          "min": 20,
+          "max": 100,
+          "step": 1,
+          "def": 39
+        },
+        {
+          "id": "wingSetting",
+          "label": "Wing setting",
+          "type": "select",
+          "options": [
+            "Small",
+            "Medium",
+            "Large"
+          ],
+          "def": "Small"
+        }
+      ]
+    },
+    {
+      "title": "Front suspension",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "arbBladesF",
+          "label": "ARB blades (front)",
+          "unit": "",
+          "type": "number",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "def": 8
+        },
+        {
+          "id": "arbDiameterF",
+          "label": "ARB outer diameter (front)",
+          "type": "select",
+          "options": [
+            "Small",
+            "Medium",
+            "Large"
+          ],
+          "def": "Small"
+        },
+        {
+          "id": "toeInF",
+          "label": "Toe-in (front)",
+          "unit": "mm",
+          "type": "number",
+          "min": -5,
+          "max": 5,
+          "step": 0.1,
+          "def": -1
+        },
+        {
+          "id": "rideHeightLF",
+          "label": "Ride height (LF)",
+          "unit": "mm",
+          "type": "number",
+          "min": 30,
+          "max": 90,
+          "step": 0.5,
+          "def": 51.5
+        },
+        {
+          "id": "rideHeightRF",
+          "label": "Ride height (RF)",
+          "unit": "mm",
+          "type": "number",
+          "min": 30,
+          "max": 90,
+          "step": 0.5,
+          "def": 51.5
+        },
+        {
+          "id": "springRateLF",
+          "label": "Spring rate (LF)",
+          "unit": "N/mm",
+          "type": "number",
+          "min": 50,
+          "max": 400,
+          "step": 5,
+          "def": 200
+        },
+        {
+          "id": "springRateRF",
+          "label": "Spring rate (RF)",
+          "unit": "N/mm",
+          "type": "number",
+          "min": 50,
+          "max": 400,
+          "step": 5,
+          "def": 200
+        },
+        {
+          "id": "camberLF",
+          "label": "Camber (LF)",
+          "unit": "deg",
+          "type": "number",
+          "min": -6,
+          "max": 0,
+          "step": 0.1,
+          "def": -4
+        },
+        {
+          "id": "camberRF",
+          "label": "Camber (RF)",
+          "unit": "deg",
+          "type": "number",
+          "min": -6,
+          "max": 0,
+          "step": 0.1,
+          "def": -4
+        },
+        {
+          "id": "casterLF",
+          "label": "Caster (LF)",
+          "unit": "deg",
+          "type": "number",
+          "min": 5,
+          "max": 15,
+          "step": 0.1,
+          "def": 10.6
+        },
+        {
+          "id": "casterRF",
+          "label": "Caster (RF)",
+          "unit": "deg",
+          "type": "number",
+          "min": 5,
+          "max": 15,
+          "step": 0.1,
+          "def": 10.6
+        }
+      ]
+    },
+    {
+      "title": "Rear suspension",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "arbBladesR",
+          "label": "ARB blades (rear)",
+          "unit": "",
+          "type": "number",
+          "min": 1,
+          "max": 12,
+          "step": 1,
+          "def": 3
+        },
+        {
+          "id": "arbDiameterR",
+          "label": "ARB outer diameter (rear)",
+          "type": "select",
+          "options": [
+            "Small",
+            "Medium",
+            "Large"
+          ],
+          "def": "Small"
+        },
+        {
+          "id": "rideHeightLR",
+          "label": "Ride height (LR)",
+          "unit": "mm",
+          "type": "number",
+          "min": 30,
+          "max": 100,
+          "step": 0.5,
+          "def": 55.1
+        },
+        {
+          "id": "rideHeightRR",
+          "label": "Ride height (RR)",
+          "unit": "mm",
+          "type": "number",
+          "min": 30,
+          "max": 100,
+          "step": 0.5,
+          "def": 55.1
+        },
+        {
+          "id": "springRateLR",
+          "label": "Spring rate (LR)",
+          "unit": "N/mm",
+          "type": "number",
+          "min": 50,
+          "max": 400,
+          "step": 5,
+          "def": 240
+        },
+        {
+          "id": "springRateRR",
+          "label": "Spring rate (RR)",
+          "unit": "N/mm",
+          "type": "number",
+          "min": 50,
+          "max": 400,
+          "step": 5,
+          "def": 240
+        },
+        {
+          "id": "camberLR",
+          "label": "Camber (LR)",
+          "unit": "deg",
+          "type": "number",
+          "min": -6,
+          "max": 0,
+          "step": 0.1,
+          "def": -3
+        },
+        {
+          "id": "camberRR",
+          "label": "Camber (RR)",
+          "unit": "deg",
+          "type": "number",
+          "min": -6,
+          "max": 0,
+          "step": 0.1,
+          "def": -3
+        },
+        {
+          "id": "toeInLR",
+          "label": "Toe-in (LR)",
+          "unit": "mm",
+          "type": "number",
+          "min": -5,
+          "max": 5,
+          "step": 0.1,
+          "def": 1
+        },
+        {
+          "id": "toeInRR",
+          "label": "Toe-in (RR)",
+          "unit": "mm",
+          "type": "number",
+          "min": -5,
+          "max": 5,
+          "step": 0.1,
+          "def": 1
+        }
+      ]
+    },
+    {
+      "title": "Weight distribution",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "crossWeight",
+          "label": "Cross weight",
+          "unit": "%",
+          "type": "number",
+          "min": 40,
+          "max": 60,
+          "step": 0.1,
+          "def": 50
+        }
+      ]
+    },
+    {
+      "title": "Front dampers",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "lscF",
+          "label": "Low Speed Compression damping (F)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 11
+        },
+        {
+          "id": "hscF",
+          "label": "High Speed Compression damping (F)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 7
+        },
+        {
+          "id": "hscSlopeF",
+          "label": "HSC slope damping (F)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 6
+        },
+        {
+          "id": "lsrF",
+          "label": "Low Speed Rebound damping (F)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 11
+        },
+        {
+          "id": "hsrF",
+          "label": "High Speed Rebound damping (F)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 3
+        },
+        {
+          "id": "hsrSlopeF",
+          "label": "HSR slope damping (F)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 0
+        }
+      ]
+    },
+    {
+      "title": "Rear dampers",
+      "color": "var(--aero)",
+      "fields": [
+        {
+          "id": "lscR",
+          "label": "Low Speed Compression damping (R)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 11
+        },
+        {
+          "id": "hscR",
+          "label": "High Speed Compression damping (R)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 4
+        },
+        {
+          "id": "hscSlopeR",
+          "label": "HSC slope damping (R)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 3
+        },
+        {
+          "id": "lsrR",
+          "label": "Low Speed Rebound damping (R)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 11
+        },
+        {
+          "id": "hsrR",
+          "label": "High Speed Rebound damping (R)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 3
+        },
+        {
+          "id": "hsrSlopeR",
+          "label": "HSR slope damping (R)",
+          "unit": "clicks",
+          "type": "number",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "def": 0
+        }
+      ]
+    }
+  ]
+}

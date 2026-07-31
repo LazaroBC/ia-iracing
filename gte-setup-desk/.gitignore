@@ -1,9 +1,11 @@
-# Copias de seguridad exportadas desde la app (contienen tus setups personales)
-*.json
-
-# Archivos de setup reales de iRacing (binarios, no controlar versión de estos aquí salvo que quieras)
-*.sto
-
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Archivos de setup reales de iRacing (binarios, no se versionan aquí salvo que quieras)
+*.sto
+
+# Copias de exportación de setups (.json): se ignoran por defecto, salvo excepciones explícitas
+*.json
+!cars/**/config.json
+!setups-guardados/**/*.json
