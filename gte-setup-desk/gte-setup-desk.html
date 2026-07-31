@@ -1,0 +1,663 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+.gsd-root {
+  --bg: #14171C;
+  --panel: #1B1F27;
+  --panel-alt: #20252E;
+  --line: #2A3039;
+  --text: #EDEEF0;
+  --muted: #8A909C;
+  --motor: #E8853A;
+  --motor-dim: rgba(232,133,58,0.14);
+  --aero: #3FB8C4;
+  --aero-dim: rgba(63,184,196,0.14);
+  --paper: #E7E1D0;
+  --paper-ink: #2B271F;
+  --good: #6FCF7B;
+  --warn: #E6B43C;
+
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.gsd-root * { box-sizing: border-box; }
+
+.gsd-topbar { display:flex; flex-wrap:wrap; align-items:center; gap:14px; padding:16px 20px; background:linear-gradient(180deg,#191D24,#15181E); border-bottom:1px solid var(--line); }
+.gsd-brand { font-family:'Oswald',sans-serif; font-weight:600; font-size:19px; letter-spacing:0.5px; text-transform:uppercase; display:flex; align-items:baseline; gap:8px; margin-right:auto; }
+.gsd-brand span { color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:400; letter-spacing:1px; }
+.gsd-field { display:flex; flex-direction:column; gap:4px; }
+.gsd-field label { font-size:10px; text-transform:uppercase; letter-spacing:0.6px; color:var(--muted); }
+.gsd-field select { background:var(--panel-alt); border:1px solid var(--line); color:var(--text); font-family:'Inter',sans-serif; font-size:13px; padding:7px 10px; border-radius:6px; min-width:170px; }
+.gsd-badge { font-family:'JetBrains Mono',monospace; font-size:11px; padding:7px 12px; border-radius:6px; border:1px solid var(--line); background:var(--panel-alt); color:var(--muted); }
+.gsd-badge.wet { border-color:var(--aero); color:var(--aero); background:var(--aero-dim); }
+.gsd-badge.dry { border-color:var(--warn); color:var(--warn); background:rgba(230,180,60,0.1); }
+
+.gsd-approx-banner { margin:14px 20px 0; padding:9px 13px; border:1px solid rgba(230,180,60,0.4); background:rgba(230,180,60,0.08); color:var(--warn); font-size:12px; border-radius:7px; }
+
+.gsd-body { display:grid; grid-template-columns: 1.5fr 1fr; gap:0; }
+@media (max-width:760px) { .gsd-body { grid-template-columns:1fr; } }
+.gsd-main { padding:16px 20px; max-height: 640px; overflow-y:auto; }
+
+.gsd-tabs { display:flex; gap:8px; margin-bottom:14px; position:sticky; top:0; background:var(--bg); padding-bottom:4px; z-index:2; }
+.gsd-tab { flex:1; display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.5px; text-transform:uppercase; padding:11px; border-radius:8px; border:1px solid var(--line); background:var(--panel); color:var(--muted); cursor:pointer; }
+.gsd-tab .dot { width:8px; height:8px; border-radius:50%; background:var(--muted); }
+.gsd-tab[data-role="motor"].active { background:var(--motor-dim); border-color:var(--motor); color:var(--motor); }
+.gsd-tab[data-role="motor"].active .dot { background:var(--motor); }
+.gsd-tab[data-role="aero"].active { background:var(--aero-dim); border-color:var(--aero); color:var(--aero); }
+.gsd-tab[data-role="aero"].active .dot { background:var(--aero); }
+.gsd-tab[data-role="notes"].active { background:var(--panel-alt); border-color:var(--muted); color:var(--text); }
+
+.ir-group { border:1px solid var(--line); border-radius:10px; margin-bottom:12px; overflow:hidden; }
+.ir-group h4 { margin:0; padding:9px 14px; font-family:'Oswald',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:0.8px; background:var(--panel-alt); border-bottom:1px solid var(--line); color: var(--group-color, var(--text)); }
+.ir-group-body { padding:4px 14px; background:var(--panel); }
+.ir-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0; border-bottom:1px dotted var(--line); }
+.ir-row:last-child { border-bottom:none; }
+.ir-row .lbl { font-size:12.5px; color:var(--text); }
+.stepper { display:flex; align-items:center; gap:6px; }
+.stepper button { width:24px; height:24px; border-radius:5px; border:1px solid var(--line); background:var(--panel-alt); color: var(--role-color,var(--aero)); font-size:14px; line-height:1; cursor:pointer; }
+.stepper button:hover { border-color: var(--role-color,var(--aero)); }
+.stepper input { width:64px; text-align:center; background:var(--panel-alt); border:1px solid var(--line); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12.5px; border-radius:5px; padding:4px 2px; }
+.stepper .unit { font-size:10.5px; color:var(--muted); min-width:34px; }
+.stepper .val-select { min-width:96px; text-align:center; background:var(--panel-alt); border:1px solid var(--line); color:var(--text); font-family:'JetBrains Mono',monospace; font-size:12px; border-radius:5px; padding:4px 8px; }
+
+.gsd-notes textarea { width:100%; min-height:260px; background:var(--panel); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:12px; font-family:'Inter',sans-serif; font-size:13px; line-height:1.5; }
+
+.gsd-side { background:var(--panel-alt); padding:18px; border-left:1px solid var(--line); display:flex; flex-direction:column; gap:16px; max-height: 640px; overflow-y:auto; }
+.gsd-sheet { background:var(--paper); color:var(--paper-ink); border-radius:4px; padding:16px 18px 14px; font-family:'JetBrains Mono',monospace; transform:rotate(-0.4deg); box-shadow:0 8px 18px rgba(0,0,0,0.35); position:relative; }
+.gsd-sheet::before { content:''; position:absolute; top:-7px; left:50%; transform:translateX(-50%); width:52px; height:14px; border-radius:3px; background:#8A8578; box-shadow: inset 0 -2px 3px rgba(0,0,0,0.25); }
+.gsd-sheet h3 { font-family:'Oswald',sans-serif; font-size:12.5px; text-transform:uppercase; letter-spacing:1px; margin:4px 0 8px; border-bottom:1px dashed #b8b09a; padding-bottom:7px; }
+.gsd-sheet .grp { font-size:9.5px; text-transform:uppercase; letter-spacing:0.7px; margin:8px 0 2px; color:#6b6656; }
+.gsd-sheet .row { display:flex; justify-content:space-between; font-size:10.5px; padding:2px 0; border-bottom:1px dotted rgba(43,39,31,0.15); }
+.gsd-sheet-scroll { max-height: 300px; overflow-y:auto; padding-right:4px; }
+
+.gsd-save { display:flex; gap:8px; }
+.gsd-save input { flex:1; background:var(--panel); border:1px solid var(--line); color:var(--text); border-radius:6px; padding:8px 10px; font-size:12.5px; font-family:'Inter',sans-serif; }
+.gsd-save button { font-family:'Oswald',sans-serif; letter-spacing:0.5px; text-transform:uppercase; font-size:12px; background:var(--good); color:#0E1A11; border:none; border-radius:6px; padding:8px 14px; cursor:pointer; }
+.gsd-list { display:flex; flex-direction:column; gap:6px; max-height:190px; overflow-y:auto; }
+.gsd-list-item { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 10px; background:var(--panel); border:1px solid var(--line); border-radius:6px; font-size:11.5px; }
+.gsd-list-item .meta { color:var(--muted); font-size:10px; }
+.gsd-list-item .actions { display:flex; gap:6px; }
+.gsd-list-item button { background:none; border:1px solid var(--line); color:var(--muted); border-radius:5px; padding:4px 8px; cursor:pointer; font-size:10.5px; }
+.gsd-list-item button.load:hover { border-color:var(--aero); color:var(--aero); }
+.gsd-list-item button.del:hover { border-color:#E5533D; color:#E5533D; }
+.gsd-empty { color:var(--muted); font-size:12px; text-align:center; padding:10px 0; }
+
+.gsd-note-foot { font-size:10.5px; color:var(--muted); line-height:1.5; padding-top:4px; border-top:1px solid var(--line); }
+
+.gsd-dialogue { padding:18px 20px 20px; border-top:1px solid var(--line); background:linear-gradient(180deg,#171B22,#14171C); }
+.gsd-dialogue h3 { font-family:'Oswald',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:0.8px; margin:0 0 4px; }
+.gsd-dialogue .sub { font-size:11.5px; color:var(--muted); margin-bottom:14px; }
+.gsd-log { display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; margin-bottom:14px; padding-right:4px; }
+.gsd-empty-log { color:var(--muted); font-size:12px; text-align:center; padding:14px 0; }
+.gsd-msg { max-width:78%; padding:10px 13px; border-radius:10px; font-size:13px; line-height:1.45; }
+.gsd-msg.driver { align-self:flex-end; background:var(--panel-alt); border:1px solid var(--line); border-bottom-right-radius:2px; }
+.gsd-msg.motor { align-self:flex-start; background:var(--motor-dim); border:1px solid rgba(232,133,58,0.35); border-bottom-left-radius:2px; }
+.gsd-msg.aero { align-self:flex-start; background:var(--aero-dim); border:1px solid rgba(63,184,196,0.35); border-bottom-left-radius:2px; }
+.gsd-msg.error { align-self:center; background:rgba(229,83,61,0.1); border:1px solid rgba(229,83,61,0.35); color:#F0A79C; font-size:12px; }
+.gsd-msg .who { font-family:'Oswald',sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:4px; display:block; }
+.gsd-msg.motor .who { color:var(--motor); }
+.gsd-msg.aero .who { color:var(--aero); }
+.gsd-chips { display:flex; flex-direction:column; gap:6px; margin-top:9px; }
+.gsd-chip { display:flex; align-items:center; justify-content:space-between; gap:8px; background:rgba(0,0,0,0.18); border-radius:6px; padding:7px 9px; font-family:'JetBrains Mono',monospace; font-size:11px; }
+.gsd-chip .desc { display:flex; flex-direction:column; gap:2px; font-family:'Inter',sans-serif; }
+.gsd-chip .desc .reason { color:var(--muted); font-size:10.5px; font-family:'Inter',sans-serif; }
+.gsd-chip button { flex-shrink:0; font-family:'Oswald',sans-serif; font-size:10.5px; text-transform:uppercase; letter-spacing:0.5px; border:1px solid currentColor; background:none; border-radius:5px; padding:5px 9px; cursor:pointer; }
+.gsd-chip.motor button { color:var(--motor); }
+.gsd-chip.aero button { color:var(--aero); }
+.gsd-chip button:disabled { opacity:0.5; cursor:default; }
+.gsd-log-input { display:flex; gap:8px; align-items:flex-end; }
+.gsd-log-input textarea { flex:1; resize:vertical; min-height:52px; max-height:140px; background:var(--panel-alt); border:1px solid var(--line); color:var(--text); border-radius:8px; padding:10px 12px; font-family:'Inter',sans-serif; font-size:13px; line-height:1.4; }
+.gsd-log-input button { font-family:'Oswald',sans-serif; letter-spacing:0.5px; text-transform:uppercase; font-size:12px; background:var(--aero); color:#0A2226; border:none; border-radius:6px; padding:12px 16px; cursor:pointer; white-space:nowrap; }
+.gsd-log-input button:disabled { opacity:0.55; cursor:default; }
+</style>
+
+<div class="gsd-root">
+  <div class="gsd-topbar">
+    <div class="gsd-brand">GTE Setup Desk <span>PROYECTO DE PUESTA A PUNTO</span></div>
+    <div class="gsd-field">
+      <label>Coche</label>
+      <select id="gsd-car">
+        <option value="ferrari">Ferrari 488 GTE</option>
+        <option value="porsche">Porsche 911 RSR GTE</option>
+      </select>
+    </div>
+    <div class="gsd-field">
+      <label>Circuito (temporada)</label>
+      <select id="gsd-track">
+        <option>Autodromo Nazionale Monza - Grand Prix</option>
+        <option>Suzuka International Racing Course - Grand Prix</option>
+        <option>Circuit de Spa-Francorchamps - Grand Prix Pits</option>
+        <option>Mount Panorama Circuit</option>
+        <option>Circuit de Barcelona Catalunya - Historic</option>
+        <option>Nürburgring Combined - Gesamtstrecke 24h</option>
+        <option>Circuit des 24 Heures du Mans - 24 Heures du Mans</option>
+        <option>Fuji International Speedway - No Chicane</option>
+        <option>Sebring International Raceway - International</option>
+        <option>Red Bull Ring - Grand Prix</option>
+        <option>Autodromo Internazionale Enzo e Dino Ferrari - Grand Prix</option>
+        <option>Circuit Gilles Villeneuve</option>
+      </select>
+    </div>
+    <div class="gsd-badge" id="gsd-tire-badge">Tire type: Dry</div>
+  </div>
+
+  <div id="gsd-approx-banner" class="gsd-approx-banner" style="display:none;">⚠ Datos aproximados para este coche, pendientes de tus capturas exactas de iRacing. Los valores de partida no están confirmados como en el Ferrari.</div>
+
+  <div class="gsd-body">
+    <div class="gsd-main">
+      <div class="gsd-tabs">
+        <div class="gsd-tab" data-role="motor"><span class="dot"></span>Ing. Motor</div>
+        <div class="gsd-tab" data-role="aero"><span class="dot"></span>Ing. Aero</div>
+        <div class="gsd-tab" data-role="notes"><span class="dot"></span>Notes</div>
+      </div>
+      <div id="gsd-groups"></div>
+      <div id="gsd-notes-panel" class="gsd-notes" style="display:none;">
+        <textarea id="gsd-notes-text" placeholder="Notas libres del setup (frenada, tracción, condiciones de pista, referencias de vuelta...)"></textarea>
+      </div>
+      <div class="gsd-note-foot">Rangos y pasos de cada parámetro son una estimación mía de partida; los valores iniciales del Ferrari sí vienen exactos de tu captura. Los campos de solo lectura del simulador (temperaturas, desgaste, peso por esquina, top speed, downforce %, altura de splitter, LEDs) no están incluidos porque no son ajustables. El guardado interno puede no persistir si abres este archivo fuera de esta conversación; usa "Exportar" para descargar una copia de seguridad en tu PC e "Importar" para recuperarla.</div>
+    </div>
+
+    <div class="gsd-side">
+      <div class="gsd-sheet">
+        <h3>Hoja de setup</h3>
+        <div class="gsd-sheet-scroll">
+          <div class="grp">Motor</div>
+          <div id="gsd-sheet-motor"></div>
+          <div class="grp">Aero</div>
+          <div id="gsd-sheet-aero"></div>
+        </div>
+      </div>
+      <div>
+        <div class="gsd-save">
+          <input id="gsd-name" type="text" placeholder="Nombre del setup (ej: Ferrari Monza lluvia v1)" />
+          <button id="gsd-save-btn">Guardar</button>
+        </div>
+        <div id="gsd-save-status" style="font-size:11px;margin-top:5px;min-height:14px;"></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);">Histórico de setups guardados</span>
+          <div style="display:flex;gap:6px;">
+            <button id="gsd-export-btn" title="Descargar copia de seguridad en .json" style="font-size:10px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:5px;padding:4px 8px;cursor:pointer;">Exportar</button>
+            <button id="gsd-import-btn" title="Cargar copia de seguridad en .json" style="font-size:10px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:5px;padding:4px 8px;cursor:pointer;">Importar</button>
+            <input id="gsd-import-file" type="file" accept="application/json" style="display:none;">
+          </div>
+        </div>
+        <div class="gsd-list" id="gsd-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gsd-dialogue">
+    <h3>Diálogo con los ingenieros</h3>
+    <div class="sub">Cuéntales cómo se siente el coche en pista, en tus palabras. Cada ingeniero responde desde su área y propone cambios de setup que puedes aplicar con un clic.</div>
+    <div class="gsd-log" id="gsd-log"><div class="gsd-empty-log">Todavía no has hablado con los ingenieros. Cuéntales qué sientes al volante.</div></div>
+    <div class="gsd-log-input">
+      <textarea id="gsd-driver-input" placeholder="Ej: en las curvas rápidas se me va de atrás nada más pisar el freno, y al acelerar de salida la rueda interior patina mucho..."></textarea>
+      <button id="gsd-send-btn">Enviar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const N = (id,label,unit,min,max,step,def) => ({id,label,unit,type:'number',min,max,step,def});
+  const S = (id,label,options,def) => ({id,label,type:'select',options,def});
+
+  const CARS = {
+    ferrari: {
+      name: 'Ferrari 488 GTE', exact: true,
+      motorGroups: [
+        { title:'Differential', color:'var(--motor)', fields:[
+          N('diffCoastRamp','Diff coast ramp angle','deg',20,80,5,40),
+          N('diffDriveRamp','Diff drive ramp angle','deg',20,80,5,60),
+          N('clutchPlates','Clutch plates','',4,12,1,6),
+          N('preload','Preload','Nm',20,200,5,110),
+        ]},
+        { title:'Gear ratios (pasos aproximados)', color:'var(--motor)', fields:[
+          N('finalDrive','Final drive','',2.0,5.0,0.05,2.455),
+          N('gear1','First gear','',2.0,4.0,0.02,3.083),
+          N('gear2','Second gear','',1.6,3.0,0.02,2.333),
+          N('gear3','Third gear','',1.2,2.4,0.02,1.830),
+          N('gear4','Fourth gear','',1.0,2.0,0.02,1.579),
+          N('gear5','Fifth gear','',0.9,1.8,0.02,1.381),
+          N('gear6','Sixth gear','',0.8,1.6,0.02,1.217),
+        ]},
+        { title:'Brakes', color:'var(--motor)', fields:[
+          N('brakeBias','Brake pressure bias','%',45,65,0.5,51.0),
+          N('frontMasterCyl','Front master cyl.','mm',16,26,0.1,20.6),
+          N('rearMasterCyl','Rear master cyl.','mm',16,26,0.1,20.6),
+          S('brakePads','Brake pads',['Low friction','Medium friction','High friction'],'Medium friction'),
+        ]},
+        { title:'In-car dials (electronics)', color:'var(--motor)', fields:[
+          N('tc1','Traction control setting 1 (TC1)','',0,11,1,3),
+          N('tc2','Traction control setting 2 (TC2)','',0,11,1,4),
+          N('engineMap','Engine map setting (MIX)','',1,12,1,1),
+          N('throttleShape','Throttle shape setting (MAP)','',1,6,1,1),
+        ]},
+        { title:'Fuel', color:'var(--motor)', fields:[
+          N('fuelLevel','Fuel level','L',5,100,0.5,45.0),
+        ]},
+      ],
+      aeroGroups: [
+        { title:'Tire type & starting pressures', color:'var(--aero)', fields:[
+          S('tireType','Tire type',['Dry','Wet'],'Dry'),
+          N('lfPressure','LF Starting pressure','kPa',100,250,1,162),
+          N('rfPressure','RF Starting pressure','kPa',100,250,1,162),
+          N('lrPressure','LR Starting pressure','kPa',100,250,1,159),
+          N('rrPressure','RR Starting pressure','kPa',100,250,1,159),
+        ]},
+        { title:'Aero balance calc', color:'var(--aero)', fields:[
+          N('frontRHspeed','Front RH at speed','mm',20,80,1,49),
+          N('rearRHspeed','Rear RH at speed','mm',20,100,1,39),
+          S('wingSetting','Wing setting',['Small','Medium','Large'],'Small'),
+        ]},
+        { title:'Front suspension', color:'var(--aero)', fields:[
+          N('arbBladesF','ARB blades (front)','',1,12,1,8),
+          S('arbDiameterF','ARB outer diameter (front)',['Small','Medium','Large'],'Small'),
+          N('toeInF','Toe-in (front)','mm',-5,5,0.1,-1.0),
+          N('rideHeightLF','Ride height (LF)','mm',30,90,0.5,51.5),
+          N('rideHeightRF','Ride height (RF)','mm',30,90,0.5,51.5),
+          N('springRateLF','Spring rate (LF)','N/mm',50,400,5,200),
+          N('springRateRF','Spring rate (RF)','N/mm',50,400,5,200),
+          N('camberLF','Camber (LF)','deg',-6,0,0.1,-4.0),
+          N('camberRF','Camber (RF)','deg',-6,0,0.1,-4.0),
+          N('casterLF','Caster (LF)','deg',5,15,0.1,10.6),
+          N('casterRF','Caster (RF)','deg',5,15,0.1,10.6),
+        ]},
+        { title:'Rear suspension', color:'var(--aero)', fields:[
+          N('arbBladesR','ARB blades (rear)','',1,12,1,3),
+          S('arbDiameterR','ARB outer diameter (rear)',['Small','Medium','Large'],'Small'),
+          N('rideHeightLR','Ride height (LR)','mm',30,100,0.5,55.1),
+          N('rideHeightRR','Ride height (RR)','mm',30,100,0.5,55.1),
+          N('springRateLR','Spring rate (LR)','N/mm',50,400,5,240),
+          N('springRateRR','Spring rate (RR)','N/mm',50,400,5,240),
+          N('camberLR','Camber (LR)','deg',-6,0,0.1,-3.0),
+          N('camberRR','Camber (RR)','deg',-6,0,0.1,-3.0),
+          N('toeInLR','Toe-in (LR)','mm',-5,5,0.1,1.0),
+          N('toeInRR','Toe-in (RR)','mm',-5,5,0.1,1.0),
+        ]},
+        { title:'Weight distribution', color:'var(--aero)', fields:[
+          N('crossWeight','Cross weight','%',40,60,0.1,50.0),
+        ]},
+        { title:'Front dampers', color:'var(--aero)', fields:[
+          N('lscF','Low Speed Compression damping (F)','clicks',0,20,1,11),
+          N('hscF','High Speed Compression damping (F)','clicks',0,20,1,7),
+          N('hscSlopeF','HSC slope damping (F)','clicks',0,20,1,6),
+          N('lsrF','Low Speed Rebound damping (F)','clicks',0,20,1,11),
+          N('hsrF','High Speed Rebound damping (F)','clicks',0,20,1,3),
+          N('hsrSlopeF','HSR slope damping (F)','clicks',0,20,1,0),
+        ]},
+        { title:'Rear dampers', color:'var(--aero)', fields:[
+          N('lscR','Low Speed Compression damping (R)','clicks',0,20,1,11),
+          N('hscR','High Speed Compression damping (R)','clicks',0,20,1,4),
+          N('hscSlopeR','HSC slope damping (R)','clicks',0,20,1,3),
+          N('lsrR','Low Speed Rebound damping (R)','clicks',0,20,1,11),
+          N('hsrR','High Speed Rebound damping (R)','clicks',0,20,1,3),
+          N('hsrSlopeR','HSR slope damping (R)','clicks',0,20,1,0),
+        ]},
+      ],
+    },
+    porsche: {
+      name: 'Porsche 911 RSR GTE', exact: false,
+      motorGroups: [
+        { title:'Brakes & differential (aproximado)', color:'var(--motor)', fields:[
+          N('brakeBias','Brake pressure bias','%',52,62,0.5,56),
+          N('brakePressure','Brake pressure','%',80,100,1,96),
+          N('diffPreload','Diff preload','Nm',20,100,5,50),
+          N('diffPower','Diff power lock','%',20,80,5,45),
+          N('diffCoast','Diff coast lock','%',0,60,5,20),
+        ]},
+        { title:'In-car dials (aproximado)', color:'var(--motor)', fields:[
+          N('tc','Traction control','level',0,10,1,3),
+        ]},
+      ],
+      aeroGroups: [
+        { title:'Suspension & aero (aproximado)', color:'var(--aero)', fields:[
+          N('rideHeightF','Ride height (front)','mm',50,75,1,58),
+          N('rideHeightR','Ride height (rear)','mm',60,90,1,72),
+          N('wingAngle','Wing setting','deg',0,10,0.5,4),
+          N('arbF','ARB (front)','level',1,8,1,5),
+          N('arbR','ARB (rear)','level',1,8,1,4),
+          N('toeF','Toe-in (front)','deg',-0.2,0.2,0.05,-0.05),
+        ]},
+      ],
+    },
+  };
+
+  function defaultsFor(groups) {
+    const out = {};
+    groups.forEach(g => g.fields.forEach(f => out[f.id] = f.def));
+    return out;
+  }
+
+  const state = {
+    carKey: 'ferrari',
+    role: 'motor',
+    track: 'Autodromo Nazionale Monza - Grand Prix',
+    values: {
+      ferrari: { motor: defaultsFor(CARS.ferrari.motorGroups), aero: defaultsFor(CARS.ferrari.aeroGroups), notes:'' },
+      porsche: { motor: defaultsFor(CARS.porsche.motorGroups), aero: defaultsFor(CARS.porsche.aeroGroups), notes:'' },
+    }
+  };
+
+  const root = document.querySelector('.gsd-root');
+  const $ = sel => root.querySelector(sel);
+
+  function fmt(v, step) {
+    const dec = (String(step).split('.')[1] || '').length;
+    return Number(v).toFixed(dec);
+  }
+
+  function findField(carKey, role, id) {
+    const groups = CARS[carKey][role + 'Groups'];
+    for (const g of groups) { const f = g.fields.find(x => x.id === id); if (f) return f; }
+    return null;
+  }
+
+  function clamp(carKey, role, id, raw) {
+    const f = findField(carKey, role, id);
+    if (!f || f.type !== 'number') return raw;
+    let v = Math.min(f.max, Math.max(f.min, Number(raw)));
+    const steps = Math.round((v - f.min) / f.step);
+    v = f.min + steps * f.step;
+    return Math.round(v * 10000) / 10000;
+  }
+
+  function renderGroups() {
+    const car = CARS[state.carKey];
+    const groups = car[state.role + 'Groups'];
+    const roleColor = state.role === 'motor' ? 'var(--motor)' : 'var(--aero)';
+    const vals = state.values[state.carKey][state.role];
+
+    $('#gsd-approx-banner').style.display = car.exact ? 'none' : 'block';
+
+    $('#gsd-groups').innerHTML = groups.map(g => `
+      <div class="ir-group">
+        <h4 style="--group-color:${g.color}">${g.title}</h4>
+        <div class="ir-group-body" style="--role-color:${roleColor}">
+          ${g.fields.map(f => {
+            if (f.type === 'select') {
+              return `<div class="ir-row"><span class="lbl">${f.label}</span>
+                <div class="stepper">
+                  <button class="dec" data-id="${f.id}" data-select="true">−</button>
+                  <span class="val-select" data-id="${f.id}">${vals[f.id]}</span>
+                  <button class="inc" data-id="${f.id}" data-select="true">+</button>
+                </div>
+              </div>`;
+            }
+            const v = vals[f.id];
+            return `<div class="ir-row"><span class="lbl">${f.label}</span>
+              <div class="stepper">
+                <button class="dec" data-id="${f.id}">−</button>
+                <input type="text" data-id="${f.id}" value="${fmt(v,f.step)}">
+                <button class="inc" data-id="${f.id}">+</button>
+                <span class="unit">${f.unit||''}</span>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    root.querySelectorAll('#gsd-groups .stepper button').forEach(btn => btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const f = findField(state.carKey, state.role, id);
+      const dir = btn.classList.contains('inc') ? 1 : -1;
+      if (btn.dataset.select === 'true') {
+        const idx = f.options.indexOf(vals[id]);
+        const newIdx = Math.min(f.options.length - 1, Math.max(0, idx + dir));
+        vals[id] = f.options[newIdx];
+        if (id === 'tireType') updateTireBadge();
+      } else {
+        vals[id] = clamp(state.carKey, state.role, id, vals[id] + dir * f.step);
+      }
+      renderGroups(); renderSheet();
+    }));
+    root.querySelectorAll('#gsd-groups .stepper input').forEach(inp => inp.addEventListener('change', () => {
+      vals[inp.dataset.id] = clamp(state.carKey, state.role, inp.dataset.id, parseFloat(inp.value) || 0);
+      renderGroups(); renderSheet();
+    }));
+  }
+
+  function updateTireBadge() {
+    const tireType = state.values[state.carKey].aero.tireType || 'Dry';
+    const badge = $('#gsd-tire-badge');
+    badge.textContent = 'Tire type: ' + tireType;
+    badge.className = 'gsd-badge ' + (tireType === 'Wet' ? 'wet' : 'dry');
+  }
+
+  function renderSheet() {
+    const car = CARS[state.carKey];
+    const vals = state.values[state.carKey];
+    const build = groups => groups.map(g => `<div class="grp">${g.title}</div>` + g.fields.map(f => {
+      const v = vals[groups===car.motorGroups?'motor':'aero'][f.id];
+      return `<div class="row"><span>${f.label}</span><span>${f.type==='select'?v:fmt(v,f.step)+' '+(f.unit||'')}</span></div>`;
+    }).join('')).join('');
+    $('#gsd-sheet-motor').innerHTML = build(car.motorGroups);
+    $('#gsd-sheet-aero').innerHTML = build(car.aeroGroups);
+  }
+
+  function renderTabs() {
+    root.querySelectorAll('.gsd-tab').forEach(t => t.classList.toggle('active', t.dataset.role === state.role));
+    $('#gsd-groups').style.display = state.role === 'notes' ? 'none' : 'block';
+    $('#gsd-notes-panel').style.display = state.role === 'notes' ? 'block' : 'none';
+    if (state.role === 'notes') $('#gsd-notes-text').value = state.values[state.carKey].notes || '';
+  }
+
+  root.querySelectorAll('.gsd-tab').forEach(t => t.addEventListener('click', () => {
+    if (t.dataset.role !== 'notes') state.role = t.dataset.role;
+    else state.role = 'notes';
+    renderTabs();
+    if (state.role !== 'notes') renderGroups();
+  }));
+  $('#gsd-notes-text').addEventListener('input', e => { state.values[state.carKey].notes = e.target.value; });
+
+  $('#gsd-car').addEventListener('change', e => {
+    state.carKey = e.target.value;
+    if (state.role === 'notes') { renderTabs(); } else { renderGroups(); }
+    renderSheet(); updateTireBadge();
+  });
+  $('#gsd-track').addEventListener('change', e => { state.track = e.target.value; });
+
+  // Persistencia: histórico de setups
+  const STORE_KEY = 'gte-setup-desk-list-v2';
+  async function loadList() {
+    try { const res = await window.storage.get(STORE_KEY, false); return res ? JSON.parse(res.value) : []; }
+    catch (e) { return []; }
+  }
+  async function saveList(list) {
+    try { await window.storage.set(STORE_KEY, JSON.stringify(list), false); } catch (e) { console.error(e); }
+  }
+  async function renderList() {
+    const list = await loadList();
+    const el = $('#gsd-list');
+    if (!list.length) { el.innerHTML = '<div class="gsd-empty">Todavía no hay setups guardados.</div>'; return; }
+    el.innerHTML = list.map((s, i) => `
+      <div class="gsd-list-item">
+        <div>
+          <div>${s.name}</div>
+          <div class="meta">${CARS[s.carKey].name} · ${s.track} · ${new Date(s.savedAt).toLocaleDateString()}</div>
+        </div>
+        <div class="actions">
+          <button class="load" data-i="${i}">Cargar</button>
+          <button class="del" data-i="${i}">Borrar</button>
+        </div>
+      </div>`).join('');
+    el.querySelectorAll('button.load').forEach(b => b.addEventListener('click', async () => {
+      const list = await loadList(); const s = list[parseInt(b.dataset.i)]; if (!s) return;
+      state.carKey = s.carKey; state.track = s.track;
+      state.values[s.carKey] = { motor:{...s.motor}, aero:{...s.aero}, notes: s.notes||'' };
+      $('#gsd-car').value = state.carKey; $('#gsd-track').value = state.track;
+      renderTabs(); if (state.role !== 'notes') renderGroups(); renderSheet(); updateTireBadge();
+    }));
+    el.querySelectorAll('button.del').forEach(b => b.addEventListener('click', async () => {
+      const list = await loadList(); list.splice(parseInt(b.dataset.i),1); await saveList(list); renderList();
+    }));
+  }
+  $('#gsd-save-btn').addEventListener('click', async () => {
+    const nameInput = $('#gsd-name');
+    const statusEl = $('#gsd-save-status');
+    const name = nameInput.value.trim() || `${CARS[state.carKey].name} - ${state.track}`;
+    const list = await loadList();
+    const vals = state.values[state.carKey];
+    list.unshift({ name, carKey: state.carKey, track: state.track, motor:{...vals.motor}, aero:{...vals.aero}, notes: vals.notes||'', savedAt: Date.now() });
+    try {
+      const result = await window.storage.set(STORE_KEY, JSON.stringify(list), false);
+      if (!result) throw new Error('Sin confirmación del backend de almacenamiento');
+      statusEl.style.color = 'var(--good)';
+      statusEl.textContent = 'Guardado ✓';
+    } catch (e) {
+      statusEl.style.color = '#E5533D';
+      statusEl.textContent = 'No se pudo guardar en el almacenamiento interno. Usa "Exportar" para no perder este setup.';
+      console.error(e);
+    }
+    nameInput.value = '';
+    renderList();
+    setTimeout(() => { statusEl.textContent = ''; }, 5000);
+  });
+
+  $('#gsd-export-btn').addEventListener('click', async () => {
+    const list = await loadList();
+    const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gte-setup-desk-backup.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  $('#gsd-import-btn').addEventListener('click', () => $('#gsd-import-file').click());
+  $('#gsd-import-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const imported = JSON.parse(reader.result);
+        if (!Array.isArray(imported)) throw new Error('Formato inválido');
+        const current = await loadList();
+        const seen = new Set(current.map(s => s.name + '|' + s.savedAt));
+        const merged = [...imported.filter(s => !seen.has(s.name + '|' + s.savedAt)), ...current];
+        await saveList(merged);
+        renderList();
+        const statusEl = $('#gsd-save-status');
+        statusEl.style.color = 'var(--good)';
+        statusEl.textContent = `Importados ${imported.length} setups.`;
+        setTimeout(() => { statusEl.textContent = ''; }, 5000);
+      } catch (err) {
+        alert('No se pudo leer el archivo de copia de seguridad. ¿Es un .json exportado desde esta misma herramienta?');
+        console.error(err);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  // Diálogo con los ingenieros
+  const chatLogEl = $('#gsd-log');
+  function appendLogHTML(html) {
+    if (chatLogEl.querySelector('.gsd-empty-log')) chatLogEl.innerHTML = '';
+    chatLogEl.insertAdjacentHTML('beforeend', html);
+    chatLogEl.scrollTop = chatLogEl.scrollHeight;
+  }
+  function suggestionChipsHTML(role, suggestions) {
+    if (!suggestions || !suggestions.length) return '';
+    return `<div class="gsd-chips">${suggestions.map(s => {
+      const f = findField(state.carKey, role, s.paramId);
+      if (!f) return '';
+      const curVal = state.values[state.carKey][role][s.paramId];
+      const newVal = f.type === 'select' ? s.newValue : clamp(state.carKey, role, s.paramId, s.newValue);
+      const curDisp = f.type === 'select' ? curVal : fmt(curVal, f.step) + ' ' + (f.unit||'');
+      const newDisp = f.type === 'select' ? newVal : fmt(newVal, f.step) + ' ' + (f.unit||'');
+      return `<div class="gsd-chip ${role}">
+        <div class="desc"><span class="change">${f.label}: ${curDisp} → ${newDisp}</span><span class="reason">${s.reason||''}</span></div>
+        <button data-role="${role}" data-id="${s.paramId}" data-val="${newVal}" data-select="${f.type==='select'}">Aplicar</button>
+      </div>`;
+    }).join('')}</div>`;
+  }
+  function wireChipButtons(container) {
+    container.querySelectorAll('.gsd-chip button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const role = btn.dataset.role, id = btn.dataset.id;
+        const isSelect = btn.dataset.select === 'true';
+        state.values[state.carKey][role][id] = isSelect ? btn.dataset.val : parseFloat(btn.dataset.val);
+        if (state.role === role) renderGroups();
+        if (id === 'tireType') updateTireBadge();
+        renderSheet();
+        btn.textContent = 'Aplicado'; btn.disabled = true;
+      });
+    });
+  }
+  async function askEngineers(userText) {
+    const sendBtn = $('#gsd-send-btn');
+    sendBtn.disabled = true;
+    appendLogHTML(`<div class="gsd-msg driver"><span class="who">Piloto</span>${userText.replace(/</g,'&lt;')}</div>`);
+    appendLogHTML(`<div class="gsd-msg error" id="gsd-loading">Los ingenieros están revisando la telemetría...</div>`);
+
+    const summarize = (role) => {
+      const groups = CARS[state.carKey][role + 'Groups'];
+      const vals = state.values[state.carKey][role];
+      return groups.flatMap(g => g.fields).map(f => {
+        const cur = vals[f.id];
+        return f.type === 'select'
+          ? `${f.id} (${f.label}, opciones: ${f.options.join('/')}, valor actual ${cur})`
+          : `${f.id} (${f.label}, ${f.unit||'sin unidad'}, rango ${f.min} a ${f.max}, paso ${f.step}, valor actual ${cur})`;
+      }).join('; ');
+    };
+
+    const prompt = `Eres el equipo de ingeniería de un coche GTE en iRacing: un Ingeniero de Motor (frenos, diferencial, marchas, electrónica, combustible) y un Ingeniero de Aerodinámica (neumáticos, alturas, alerón, barras, amortiguadores, reparto de peso). El piloto te da sus sensaciones en pista. Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional ni markdown, con esta forma exacta:
+{"suggestions":[{"role":"motor o aero","paramId":"id exacto de la lista","newValue":numero o texto de opción exacto,"reason":"razón breve, máximo 18 palabras"}],"reply":{"motor":"mensaje breve en primera persona del ingeniero de motor, o cadena vacía si no aplica","aero":"mensaje breve en primera persona del ingeniero de aero, o cadena vacía si no aplica"}}
+Reglas: usa solo paramId de las listas dadas, respeta rango y paso (o las opciones exactas si es un desplegable), no inventes ids nuevos, máximo 5 sugerencias en total, si el comentario no da pie a cambios en un área deja su reply vacío y no generes sugerencias de esa área.
+
+Contexto:
+Coche: ${CARS[state.carKey].name}
+Circuito: ${state.track}
+Parámetros motor: ${summarize('motor')}
+Parámetros aero: ${summarize('aero')}
+
+Comentario del piloto: "${userText}"`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model:'claude-sonnet-4-6', max_tokens:1000, messages:[{role:'user', content:prompt}] })
+      });
+      const data = await response.json();
+      const text = (data.content||[]).map(b => b.text||'').join('\n');
+      const clean = text.replace(/```json|```/g,'').trim();
+      const parsed = JSON.parse(clean);
+      document.getElementById('gsd-loading')?.remove();
+      const suggMotor = (parsed.suggestions||[]).filter(s => s.role==='motor');
+      const suggAero = (parsed.suggestions||[]).filter(s => s.role==='aero');
+      if (parsed.reply?.motor) appendLogHTML(`<div class="gsd-msg motor"><span class="who">Ingeniero de Motor</span>${parsed.reply.motor}${suggestionChipsHTML('motor', suggMotor)}</div>`);
+      if (parsed.reply?.aero) appendLogHTML(`<div class="gsd-msg aero"><span class="who">Ingeniero de Aero</span>${parsed.reply.aero}${suggestionChipsHTML('aero', suggAero)}</div>`);
+      if (!parsed.reply?.motor && !parsed.reply?.aero) appendLogHTML(`<div class="gsd-msg error">Los ingenieros no encontraron nada claro que ajustar. Prueba a dar más detalle (curva, fase de frenada/aceleración, condición).</div>`);
+      wireChipButtons(chatLogEl);
+    } catch (e) {
+      document.getElementById('gsd-loading')?.remove();
+      appendLogHTML(`<div class="gsd-msg error">No se pudo contactar con los ingenieros ahora mismo. Intenta de nuevo en un momento.</div>`);
+      console.error(e);
+    } finally { sendBtn.disabled = false; }
+  }
+  $('#gsd-send-btn').addEventListener('click', () => {
+    const input = $('#gsd-driver-input'); const text = input.value.trim(); if (!text) return;
+    input.value = ''; askEngineers(text);
+  });
+  $('#gsd-driver-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); $('#gsd-send-btn').click(); }
+  });
+
+  // Init
+  $('#gsd-car').value = state.carKey;
+  $('#gsd-track').value = state.track;
+  renderTabs(); renderGroups(); renderSheet(); renderList(); updateTireBadge();
+})();
+</script>
