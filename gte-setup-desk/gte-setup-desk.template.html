@@ -121,8 +121,7 @@
     <div class="gsd-field">
       <label>Coche</label>
       <select id="gsd-car">
-        <option value="ferrari">Ferrari 488 GTE</option>
-        <option value="porsche">Porsche 911 RSR GTE</option>
+        <!--__CAR_OPTIONS__-->
       </select>
     </div>
     <div class="gsd-field">
@@ -205,129 +204,11 @@
 
 <script>
 (function() {
-  const N = (id,label,unit,min,max,step,def) => ({id,label,unit,type:'number',min,max,step,def});
-  const S = (id,label,options,def) => ({id,label,type:'select',options,def});
+  // Este objeto CARS se genera automáticamente por build.py a partir de
+  // los archivos cars/<coche>/config.json. No lo edites a mano aquí:
+  // edita el config.json del coche correspondiente y vuelve a ejecutar build.py.
+  const CARS = /*__CARS_JSON__*/{};
 
-  const CARS = {
-    ferrari: {
-      name: 'Ferrari 488 GTE', exact: true,
-      motorGroups: [
-        { title:'Differential', color:'var(--motor)', fields:[
-          N('diffCoastRamp','Diff coast ramp angle','deg',20,80,5,40),
-          N('diffDriveRamp','Diff drive ramp angle','deg',20,80,5,60),
-          N('clutchPlates','Clutch plates','',4,12,1,6),
-          N('preload','Preload','Nm',20,200,5,110),
-        ]},
-        { title:'Gear ratios (pasos aproximados)', color:'var(--motor)', fields:[
-          N('finalDrive','Final drive','',2.0,5.0,0.05,2.455),
-          N('gear1','First gear','',2.0,4.0,0.02,3.083),
-          N('gear2','Second gear','',1.6,3.0,0.02,2.333),
-          N('gear3','Third gear','',1.2,2.4,0.02,1.830),
-          N('gear4','Fourth gear','',1.0,2.0,0.02,1.579),
-          N('gear5','Fifth gear','',0.9,1.8,0.02,1.381),
-          N('gear6','Sixth gear','',0.8,1.6,0.02,1.217),
-        ]},
-        { title:'Brakes', color:'var(--motor)', fields:[
-          N('brakeBias','Brake pressure bias','%',45,65,0.5,51.0),
-          N('frontMasterCyl','Front master cyl.','mm',16,26,0.1,20.6),
-          N('rearMasterCyl','Rear master cyl.','mm',16,26,0.1,20.6),
-          S('brakePads','Brake pads',['Low friction','Medium friction','High friction'],'Medium friction'),
-        ]},
-        { title:'In-car dials (electronics)', color:'var(--motor)', fields:[
-          N('tc1','Traction control setting 1 (TC1)','',0,11,1,3),
-          N('tc2','Traction control setting 2 (TC2)','',0,11,1,4),
-          N('engineMap','Engine map setting (MIX)','',1,12,1,1),
-          N('throttleShape','Throttle shape setting (MAP)','',1,6,1,1),
-        ]},
-        { title:'Fuel', color:'var(--motor)', fields:[
-          N('fuelLevel','Fuel level','L',5,100,0.5,45.0),
-        ]},
-      ],
-      aeroGroups: [
-        { title:'Tire type & starting pressures', color:'var(--aero)', fields:[
-          S('tireType','Tire type',['Dry','Wet'],'Dry'),
-          N('lfPressure','LF Starting pressure','kPa',100,250,1,162),
-          N('rfPressure','RF Starting pressure','kPa',100,250,1,162),
-          N('lrPressure','LR Starting pressure','kPa',100,250,1,159),
-          N('rrPressure','RR Starting pressure','kPa',100,250,1,159),
-        ]},
-        { title:'Aero balance calc', color:'var(--aero)', fields:[
-          N('frontRHspeed','Front RH at speed','mm',20,80,1,49),
-          N('rearRHspeed','Rear RH at speed','mm',20,100,1,39),
-          S('wingSetting','Wing setting',['Small','Medium','Large'],'Small'),
-        ]},
-        { title:'Front suspension', color:'var(--aero)', fields:[
-          N('arbBladesF','ARB blades (front)','',1,12,1,8),
-          S('arbDiameterF','ARB outer diameter (front)',['Small','Medium','Large'],'Small'),
-          N('toeInF','Toe-in (front)','mm',-5,5,0.1,-1.0),
-          N('rideHeightLF','Ride height (LF)','mm',30,90,0.5,51.5),
-          N('rideHeightRF','Ride height (RF)','mm',30,90,0.5,51.5),
-          N('springRateLF','Spring rate (LF)','N/mm',50,400,5,200),
-          N('springRateRF','Spring rate (RF)','N/mm',50,400,5,200),
-          N('camberLF','Camber (LF)','deg',-6,0,0.1,-4.0),
-          N('camberRF','Camber (RF)','deg',-6,0,0.1,-4.0),
-          N('casterLF','Caster (LF)','deg',5,15,0.1,10.6),
-          N('casterRF','Caster (RF)','deg',5,15,0.1,10.6),
-        ]},
-        { title:'Rear suspension', color:'var(--aero)', fields:[
-          N('arbBladesR','ARB blades (rear)','',1,12,1,3),
-          S('arbDiameterR','ARB outer diameter (rear)',['Small','Medium','Large'],'Small'),
-          N('rideHeightLR','Ride height (LR)','mm',30,100,0.5,55.1),
-          N('rideHeightRR','Ride height (RR)','mm',30,100,0.5,55.1),
-          N('springRateLR','Spring rate (LR)','N/mm',50,400,5,240),
-          N('springRateRR','Spring rate (RR)','N/mm',50,400,5,240),
-          N('camberLR','Camber (LR)','deg',-6,0,0.1,-3.0),
-          N('camberRR','Camber (RR)','deg',-6,0,0.1,-3.0),
-          N('toeInLR','Toe-in (LR)','mm',-5,5,0.1,1.0),
-          N('toeInRR','Toe-in (RR)','mm',-5,5,0.1,1.0),
-        ]},
-        { title:'Weight distribution', color:'var(--aero)', fields:[
-          N('crossWeight','Cross weight','%',40,60,0.1,50.0),
-        ]},
-        { title:'Front dampers', color:'var(--aero)', fields:[
-          N('lscF','Low Speed Compression damping (F)','clicks',0,20,1,11),
-          N('hscF','High Speed Compression damping (F)','clicks',0,20,1,7),
-          N('hscSlopeF','HSC slope damping (F)','clicks',0,20,1,6),
-          N('lsrF','Low Speed Rebound damping (F)','clicks',0,20,1,11),
-          N('hsrF','High Speed Rebound damping (F)','clicks',0,20,1,3),
-          N('hsrSlopeF','HSR slope damping (F)','clicks',0,20,1,0),
-        ]},
-        { title:'Rear dampers', color:'var(--aero)', fields:[
-          N('lscR','Low Speed Compression damping (R)','clicks',0,20,1,11),
-          N('hscR','High Speed Compression damping (R)','clicks',0,20,1,4),
-          N('hscSlopeR','HSC slope damping (R)','clicks',0,20,1,3),
-          N('lsrR','Low Speed Rebound damping (R)','clicks',0,20,1,11),
-          N('hsrR','High Speed Rebound damping (R)','clicks',0,20,1,3),
-          N('hsrSlopeR','HSR slope damping (R)','clicks',0,20,1,0),
-        ]},
-      ],
-    },
-    porsche: {
-      name: 'Porsche 911 RSR GTE', exact: false,
-      motorGroups: [
-        { title:'Brakes & differential (aproximado)', color:'var(--motor)', fields:[
-          N('brakeBias','Brake pressure bias','%',52,62,0.5,56),
-          N('brakePressure','Brake pressure','%',80,100,1,96),
-          N('diffPreload','Diff preload','Nm',20,100,5,50),
-          N('diffPower','Diff power lock','%',20,80,5,45),
-          N('diffCoast','Diff coast lock','%',0,60,5,20),
-        ]},
-        { title:'In-car dials (aproximado)', color:'var(--motor)', fields:[
-          N('tc','Traction control','level',0,10,1,3),
-        ]},
-      ],
-      aeroGroups: [
-        { title:'Suspension & aero (aproximado)', color:'var(--aero)', fields:[
-          N('rideHeightF','Ride height (front)','mm',50,75,1,58),
-          N('rideHeightR','Ride height (rear)','mm',60,90,1,72),
-          N('wingAngle','Wing setting','deg',0,10,0.5,4),
-          N('arbF','ARB (front)','level',1,8,1,5),
-          N('arbR','ARB (rear)','level',1,8,1,4),
-          N('toeF','Toe-in (front)','deg',-0.2,0.2,0.05,-0.05),
-        ]},
-      ],
-    },
-  };
 
   function defaultsFor(groups) {
     const out = {};
@@ -335,14 +216,19 @@
     return out;
   }
 
+  function initialValues() {
+    const out = {};
+    Object.keys(CARS).forEach(key => {
+      out[key] = { motor: defaultsFor(CARS[key].motorGroups), aero: defaultsFor(CARS[key].aeroGroups), notes:'' };
+    });
+    return out;
+  }
+
   const state = {
-    carKey: 'ferrari',
+    carKey: Object.keys(CARS)[0],
     role: 'motor',
     track: 'Autodromo Nazionale Monza - Grand Prix',
-    values: {
-      ferrari: { motor: defaultsFor(CARS.ferrari.motorGroups), aero: defaultsFor(CARS.ferrari.aeroGroups), notes:'' },
-      porsche: { motor: defaultsFor(CARS.porsche.motorGroups), aero: defaultsFor(CARS.porsche.aeroGroups), notes:'' },
-    }
+    values: initialValues(),
   };
 
   const root = document.querySelector('.gsd-root');

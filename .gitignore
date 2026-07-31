@@ -1,9 +1,0 @@
-# Copias de seguridad exportadas desde la app (contienen tus setups personales)
-*.json
-
-# Archivos de setup reales de iRacing (binarios, no controlar versión de estos aquí salvo que quieras)
-*.sto
-
-# Sistema
-.DS_Store
-Thumbs.db
