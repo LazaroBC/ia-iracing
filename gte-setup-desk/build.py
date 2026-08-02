@@ -39,7 +39,14 @@ def load_cars():
         with open(config_path, encoding='utf-8') as f:
             data = json.load(f)
         key = data.get('key', folder)
-        cars[key] = {k: v for k, v in data.items() if k != 'key'}
+        car = {k: v for k, v in data.items() if k != 'key'}
+
+        notes_path = os.path.join(CARS_DIR, folder, 'notas-iracing.md')
+        if os.path.isfile(notes_path):
+            with open(notes_path, encoding='utf-8') as f:
+                car['referenceNotes'] = f.read()
+
+        cars[key] = car
         order.append(key)
     return cars, order
 

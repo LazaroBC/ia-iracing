@@ -109,6 +109,12 @@
 .gsd-note-foot { font-size:10.5px; color:var(--muted); line-height:1.5; padding-top:4px; border-top:1px solid var(--line); }
 
 .gsd-dialogue { padding:18px 20px 20px; border-top:1px solid var(--line); background:linear-gradient(180deg,#171B22,#14171C); }
+.gsd-conditions { padding:14px 20px; border-top:1px solid var(--line); background:var(--panel-alt); }
+.gsd-conditions-title { font-family:'Oswald',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; }
+.gsd-conditions-title span { font-family:'Inter',sans-serif; text-transform:none; letter-spacing:0; color:var(--muted); font-size:11px; }
+.gsd-conditions-grid { display:grid; grid-template-columns:repeat(6, 1fr); gap:10px; }
+@media (max-width:760px) { .gsd-conditions-grid { grid-template-columns:repeat(2, 1fr); } }
+.gsd-conditions-grid select, .gsd-conditions-grid input { width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text); font-size:12px; padding:6px 8px; border-radius:6px; }
 .gsd-dialogue h3 { font-family:'Oswald',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:0.8px; margin:0 0 4px; }
 .gsd-dialogue .sub { font-size:11.5px; color:var(--muted); margin-bottom:14px; }
 .gsd-log { display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; margin-bottom:14px; padding-right:4px; }
@@ -229,6 +235,52 @@
     </div>
   </div>
 
+  <div class="gsd-conditions">
+    <div class="gsd-conditions-title">Condiciones de pista <span>(opcional, pero ayuda mucho a los ingenieros)</span></div>
+    <div class="gsd-conditions-grid">
+      <div class="gsd-field">
+        <label>Sesión</label>
+        <select id="gsd-cond-session">
+          <option>Práctica</option>
+          <option>Clasificación</option>
+          <option>Carrera</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Estado de pista</label>
+        <select id="gsd-cond-trackstate">
+          <option>Seco</option>
+          <option>Mojado</option>
+          <option>Variable / mixto</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Agarre de pista</label>
+        <select id="gsd-cond-grip">
+          <option>Verde (poco rodada)</option>
+          <option selected>Media</option>
+          <option>Goma alta (muy rodada)</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Viento</label>
+        <select id="gsd-cond-wind">
+          <option selected>Sin viento</option>
+          <option>Suave</option>
+          <option>Fuerte</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Temp. pista (°C)</label>
+        <input type="number" id="gsd-cond-tracktemp" placeholder="ej. 32">
+      </div>
+      <div class="gsd-field">
+        <label>Temp. ambiente (°C)</label>
+        <input type="number" id="gsd-cond-airtemp" placeholder="ej. 24">
+      </div>
+    </div>
+  </div>
+
   <div class="gsd-dialogue">
     <h3>Diálogo con los ingenieros</h3>
     <div class="sub">Cuéntales cómo se siente el coche en pista, en tus palabras. Cada ingeniero responde desde su área y propone cambios de setup que puedes aplicar con un clic.</div>
@@ -267,7 +319,21 @@
     role: 'motor',
     track: 'Autodromo Nazionale Monza - Grand Prix',
     values: initialValues(),
+    conditions: { session:'Práctica', trackState:'Seco', grip:'Media', wind:'Sin viento', trackTemp:'', airTemp:'' },
   };
+
+  function wireConditionInputs() {
+    const map = [
+      ['gsd-cond-session','session'], ['gsd-cond-trackstate','trackState'],
+      ['gsd-cond-grip','grip'], ['gsd-cond-wind','wind'],
+      ['gsd-cond-tracktemp','trackTemp'], ['gsd-cond-airtemp','airTemp'],
+    ];
+    map.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      el.value = state.conditions[key];
+      el.addEventListener('change', () => { state.conditions[key] = el.value; });
+    });
+  }
 
   const root = document.querySelector('.gsd-root');
   const $ = sel => root.querySelector(sel);
@@ -604,15 +670,27 @@ Dame consejos de conducción concretos, sector por sector si los canales lo perm
       }).join('; ');
     };
 
+    const conditionsText = (() => {
+      const c = state.conditions;
+      const parts = [`Sesión: ${c.session}`, `Estado de pista: ${c.trackState}`, `Agarre de pista: ${c.grip}`, `Viento: ${c.wind}`];
+      if (c.trackTemp) parts.push(`Temp. pista: ${c.trackTemp}°C`);
+      if (c.airTemp) parts.push(`Temp. ambiente: ${c.airTemp}°C`);
+      return parts.join(', ');
+    })();
+
+    const referenceNotes = CARS[state.carKey].referenceNotes;
+
     const prompt = `Eres el equipo de ingeniería de un coche GTE en iRacing: un Ingeniero de Motor (frenos, diferencial, marchas, electrónica, combustible) y un Ingeniero de Aerodinámica (neumáticos, alturas, alerón, barras, amortiguadores, reparto de peso). El piloto te da sus sensaciones en pista. Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional ni markdown, con esta forma exacta:
 {"suggestions":[{"role":"motor o aero","paramId":"id exacto de la lista","newValue":numero o texto de opción exacto,"reason":"razón breve, máximo 18 palabras"}],"reply":{"motor":"mensaje breve en primera persona del ingeniero de motor, o cadena vacía si no aplica","aero":"mensaje breve en primera persona del ingeniero de aero, o cadena vacía si no aplica"}}
-Reglas: usa solo paramId de las listas dadas, respeta rango y paso (o las opciones exactas si es un desplegable), no inventes ids nuevos, máximo 5 sugerencias en total, si el comentario no da pie a cambios en un área deja su reply vacío y no generes sugerencias de esa área.
+Reglas: usa solo paramId de las listas dadas, respeta rango y paso (o las opciones exactas si es un desplegable), no inventes ids nuevos, máximo 5 sugerencias en total, si el comentario no da pie a cambios en un área deja su reply vacío y no generes sugerencias de esa área. Si hay notas oficiales del fabricante/iRacing más abajo, el ingeniero de aero debe tenerlas en cuenta (por ejemplo, el trim de alerón recomendado según velocidad punta, o los objetivos de altura dinámica) al justificar sus sugerencias.
 
 Contexto:
 Coche: ${CARS[state.carKey].name}
 Circuito: ${state.track}
+Condiciones de pista: ${conditionsText}
 Parámetros motor: ${summarize('motor')}
 Parámetros aero: ${summarize('aero')}
+${referenceNotes ? '\nNotas oficiales de iRacing para este coche:\n' + referenceNotes : ''}
 
 Comentario del piloto: "${userText}"`;
 
@@ -649,6 +727,7 @@ Comentario del piloto: "${userText}"`;
   // Init
   $('#gsd-car').value = state.carKey;
   $('#gsd-track').value = state.track;
+  wireConditionInputs();
   renderTabs(); renderGroups(); renderSheet(); renderList(); updateTireBadge();
 })();
 </script>

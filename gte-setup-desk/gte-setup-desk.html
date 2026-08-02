@@ -109,6 +109,12 @@
 .gsd-note-foot { font-size:10.5px; color:var(--muted); line-height:1.5; padding-top:4px; border-top:1px solid var(--line); }
 
 .gsd-dialogue { padding:18px 20px 20px; border-top:1px solid var(--line); background:linear-gradient(180deg,#171B22,#14171C); }
+.gsd-conditions { padding:14px 20px; border-top:1px solid var(--line); background:var(--panel-alt); }
+.gsd-conditions-title { font-family:'Oswald',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; }
+.gsd-conditions-title span { font-family:'Inter',sans-serif; text-transform:none; letter-spacing:0; color:var(--muted); font-size:11px; }
+.gsd-conditions-grid { display:grid; grid-template-columns:repeat(6, 1fr); gap:10px; }
+@media (max-width:760px) { .gsd-conditions-grid { grid-template-columns:repeat(2, 1fr); } }
+.gsd-conditions-grid select, .gsd-conditions-grid input { width:100%; background:var(--panel); border:1px solid var(--line); color:var(--text); font-size:12px; padding:6px 8px; border-radius:6px; }
 .gsd-dialogue h3 { font-family:'Oswald',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:0.8px; margin:0 0 4px; }
 .gsd-dialogue .sub { font-size:11.5px; color:var(--muted); margin-bottom:14px; }
 .gsd-log { display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; margin-bottom:14px; padding-right:4px; }
@@ -226,6 +232,52 @@
           </div>
         </div>
         <div class="gsd-list" id="gsd-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gsd-conditions">
+    <div class="gsd-conditions-title">Condiciones de pista <span>(opcional, pero ayuda mucho a los ingenieros)</span></div>
+    <div class="gsd-conditions-grid">
+      <div class="gsd-field">
+        <label>Sesión</label>
+        <select id="gsd-cond-session">
+          <option>Práctica</option>
+          <option>Clasificación</option>
+          <option>Carrera</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Estado de pista</label>
+        <select id="gsd-cond-trackstate">
+          <option>Seco</option>
+          <option>Mojado</option>
+          <option>Variable / mixto</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Agarre de pista</label>
+        <select id="gsd-cond-grip">
+          <option>Verde (poco rodada)</option>
+          <option selected>Media</option>
+          <option>Goma alta (muy rodada)</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Viento</label>
+        <select id="gsd-cond-wind">
+          <option selected>Sin viento</option>
+          <option>Suave</option>
+          <option>Fuerte</option>
+        </select>
+      </div>
+      <div class="gsd-field">
+        <label>Temp. pista (°C)</label>
+        <input type="number" id="gsd-cond-tracktemp" placeholder="ej. 32">
+      </div>
+      <div class="gsd-field">
+        <label>Temp. ambiente (°C)</label>
+        <input type="number" id="gsd-cond-airtemp" placeholder="ej. 24">
       </div>
     </div>
   </div>
@@ -1658,7 +1710,8 @@
           }
         ]
       }
-    ]
+    ],
+    "referenceNotes": "# Notas oficiales de iRacing — Porsche 911 RSR GTE\n\nEste archivo recoge, resumidas y organizadas por tema, las notas que iRacing\naporta para este coche. Se amplía sesión a sesión: cada vez que haya notas\nnuevas, se añade un bloque `## Sesión — <fecha>` al final con lo que aporte\nde nuevo, sin borrar lo anterior.\n\n---\n\n## Nomenclatura de los setups de iRacing (carpeta del coche)\n\n| Setup | Combustible | Uso |\n|---|---|---|\n| `baseline` | — | Alta downforce, estable, punto de partida/introducción al coche |\n| `baseline_wet` | — | Neumáticos de lluvia + TC ajustado para mojado |\n| `*_sprint` | 50% | Carreras con límite de combustible, o de ~25-30 min |\n| `*_endurance` | 100% | Carreras sin límite de combustible, o de ~1h o más |\n| `*_nurburgring_combined` / `*_ringmeister` | 50% | Solo Nürburgring Nordschleife; altura mínima 70 mm |\n\n## Inspección técnica\n\nSi el setup falla la inspección técnica, lo más probable es que haya que\najustar las **alturas de suelo (ride heights)**, delante y/o detrás.\n\n## Trim aerodinámico según velocidad punta del circuito\n\nEl ángulo del alerón trasero (**RWA**, rango total 0°–12°) determina el nivel\nde downforce. `high_downforce` de iRacing usa 9°, `low_downforce` usa 1°.\n\n| Velocidad punta del circuito | Nivel de downforce | RWA sugerido |\n|---|---|---|\n| < 250 km/h | Alta | 9° a 12° |\n| 250–270 km/h | Media | 2° a 8° |\n| > 270 km/h | Baja / mínima | 0° o 1° |\n\nMás altitud o más calor ambiente → conviene más downforce que la tabla.\nEl diseño del circuito (nº de curvas rápidas, etc.) también influye — la\ntabla es una guía, no una regla fija.\n\n### Efecto del ángulo de alerón trasero (RWA)\n\n- **Menos ángulo** → más sobreviraje, menos downforce, menos drag (arrastre),\n  menos velocidad en curva, **más velocidad punta**.\n- **Más ángulo** → más subviraje, más downforce, más drag,\n  **más velocidad en curva**, menos velocidad punta.\n\n## Alturas dinámicas (ride heights) y plataforma aerodinámica\n\n- El GTE es muy sensible a pequeñas variaciones de altura, delante y detrás.\n- **Máxima downforce total** = alerón al máximo + rango de alturas dinámicas\n  objetivo (se calcula en la calculadora Aero Balance, pestaña Tires/Aero).\n- Salirse del rango objetivo (por arriba o por abajo) = pérdida de downforce.\n- Si la altura trasera sube más de la cuenta en frenada → el balance se\n  desplaza hacia delante Y se pierde downforce a la vez → efecto\n  desestabilizador. Esto es lo que en la práctica limita cuánto puedes\n  acercarte al máximo teórico.\n- **Mínimo drag** = alerón al mínimo + mismo rango de alturas objetivo —\n  raramente alcanzable sin tocar el suelo, y esta puesta a punto no es\n  óptima ni para downforce total ni para el balance.\n- Cambiar solo el ángulo del alerón cambia el balance aerodinámico → usar\n  la Aero Balance Calculator (Tires/Aero) para ver los ajustes y alturas\n  objetivo recomendados para compensar (funciona en ambos sentidos).\n- Se pueden combinar ajustes de altura delantera + trasera para retener\n  más downforce al bajar el alerón, a costa de algo más de drag.\n- Los valores de la pestaña Tires/Aero son **objetivos orientativos**, no\n  dogma: si no se puede alcanzar un buen balance exactamente en esos\n  números, prioriza el balance general por encima del número exacto.\n\n## Barras estabilizadoras (ARB)\n\n- ARB delantera más dura → **más subviraje**\n- ARB delantera más blanda → **más sobreviraje**\n- ARB trasera más dura → **más sobreviraje**\n- ARB trasera más blanda → **más subviraje**\n- Ambas más blandas → menos rendimiento aerodinámico, más agarre mecánico\n  (bueno en pistas rugosas), respuesta más lenta a los inputs.\n- Ambas más duras → más rendimiento aerodinámico (bueno en curvas rápidas\n  de barrido), menos agarre mecánico, respuesta más rápida a los inputs.\n\n## Diferencial\n\nCuatro ajustes disponibles:\n\n**Diff coast / drive ramp angle** — ángulo menor = más bloqueo.\n- *Coast* = fase de deceleración (soltar gas / frenar).\n- *Drive* = fase de aceleración.\n\n**Clutch plates / Friction faces** — dominan con par de entrada alto\n(full throttle, frenada sostenida, coastdown puro):\n- Más discos → más subviraje en retención, más sobreviraje en aceleración,\n  menos giro de la rueda interior en superficies rugosas o al pisar pianos.\n- Menos discos → lo contrario de lo anterior; normalmente mejor en pistas\n  suaves y con pianos planos (ej. Spa).\n\n**Preload** — se suma al par total de bloqueo como un offset siempre\npresente, incluso con par cero. Domina sobre todo en transición (al soltar\ngas, o al inicio del trail braking):\n- Más preload → menos sobreviraje al soltar gas, más estabilidad en\n  entrada de curva, más subviraje en retención, más sobreviraje en\n  aceleración.\n- Menos preload → lo contrario: más sobreviraje al soltar gas, menos\n  estabilidad en entrada, menos subviraje en retención, menos sobreviraje\n  en aceleración.\n\n## Marchas\n\nLas relaciones por defecto están pensadas para ajustarse a la curva de par\ndel motor. Recomendación de iRacing: ajustar primero el **Final Drive**\nsegún la velocidad punta del circuito, y luego mover marchas individuales\n±1 paso para mantenerte en la zona óptima de la banda de potencia.\n\n---\n\n## Cómo se usa esto en la práctica\n\n- Antes de tocar el alerón trasero en la app, mira la tabla de velocidad\n  punta de arriba para elegir un RWA de partida razonable.\n- Si cambias el alerón, usa el razonamiento del Aero Balance Calculator\n  (alturas objetivo) para no descompensar el balance sin darte cuenta.\n- Si notas sobreviraje/subviraje en un tramo concreto, contrasta primero\n  con las tablas de ARB y diferencial de aquí antes de tocar varios\n  parámetros a la vez.\n"
   }
 };
 
@@ -1682,7 +1735,21 @@
     role: 'motor',
     track: 'Autodromo Nazionale Monza - Grand Prix',
     values: initialValues(),
+    conditions: { session:'Práctica', trackState:'Seco', grip:'Media', wind:'Sin viento', trackTemp:'', airTemp:'' },
   };
+
+  function wireConditionInputs() {
+    const map = [
+      ['gsd-cond-session','session'], ['gsd-cond-trackstate','trackState'],
+      ['gsd-cond-grip','grip'], ['gsd-cond-wind','wind'],
+      ['gsd-cond-tracktemp','trackTemp'], ['gsd-cond-airtemp','airTemp'],
+    ];
+    map.forEach(([id, key]) => {
+      const el = document.getElementById(id);
+      el.value = state.conditions[key];
+      el.addEventListener('change', () => { state.conditions[key] = el.value; });
+    });
+  }
 
   const root = document.querySelector('.gsd-root');
   const $ = sel => root.querySelector(sel);
@@ -2019,15 +2086,27 @@ Dame consejos de conducción concretos, sector por sector si los canales lo perm
       }).join('; ');
     };
 
+    const conditionsText = (() => {
+      const c = state.conditions;
+      const parts = [`Sesión: ${c.session}`, `Estado de pista: ${c.trackState}`, `Agarre de pista: ${c.grip}`, `Viento: ${c.wind}`];
+      if (c.trackTemp) parts.push(`Temp. pista: ${c.trackTemp}°C`);
+      if (c.airTemp) parts.push(`Temp. ambiente: ${c.airTemp}°C`);
+      return parts.join(', ');
+    })();
+
+    const referenceNotes = CARS[state.carKey].referenceNotes;
+
     const prompt = `Eres el equipo de ingeniería de un coche GTE en iRacing: un Ingeniero de Motor (frenos, diferencial, marchas, electrónica, combustible) y un Ingeniero de Aerodinámica (neumáticos, alturas, alerón, barras, amortiguadores, reparto de peso). El piloto te da sus sensaciones en pista. Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional ni markdown, con esta forma exacta:
 {"suggestions":[{"role":"motor o aero","paramId":"id exacto de la lista","newValue":numero o texto de opción exacto,"reason":"razón breve, máximo 18 palabras"}],"reply":{"motor":"mensaje breve en primera persona del ingeniero de motor, o cadena vacía si no aplica","aero":"mensaje breve en primera persona del ingeniero de aero, o cadena vacía si no aplica"}}
-Reglas: usa solo paramId de las listas dadas, respeta rango y paso (o las opciones exactas si es un desplegable), no inventes ids nuevos, máximo 5 sugerencias en total, si el comentario no da pie a cambios en un área deja su reply vacío y no generes sugerencias de esa área.
+Reglas: usa solo paramId de las listas dadas, respeta rango y paso (o las opciones exactas si es un desplegable), no inventes ids nuevos, máximo 5 sugerencias en total, si el comentario no da pie a cambios en un área deja su reply vacío y no generes sugerencias de esa área. Si hay notas oficiales del fabricante/iRacing más abajo, el ingeniero de aero debe tenerlas en cuenta (por ejemplo, el trim de alerón recomendado según velocidad punta, o los objetivos de altura dinámica) al justificar sus sugerencias.
 
 Contexto:
 Coche: ${CARS[state.carKey].name}
 Circuito: ${state.track}
+Condiciones de pista: ${conditionsText}
 Parámetros motor: ${summarize('motor')}
 Parámetros aero: ${summarize('aero')}
+${referenceNotes ? '\nNotas oficiales de iRacing para este coche:\n' + referenceNotes : ''}
 
 Comentario del piloto: "${userText}"`;
 
@@ -2064,6 +2143,7 @@ Comentario del piloto: "${userText}"`;
   // Init
   $('#gsd-car').value = state.carKey;
   $('#gsd-track').value = state.track;
+  wireConditionInputs();
   renderTabs(); renderGroups(); renderSheet(); renderList(); updateTireBadge();
 })();
 </script>

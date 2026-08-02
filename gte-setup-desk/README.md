@@ -13,10 +13,22 @@ gte-setup-desk/
     ferrari488gte/
       config.json                ← Parámetros exactos del Ferrari 488 GTE
     porsche911rsrgte/
-      config.json                ← Parámetros aproximados del Porsche 911 RSR GTE
+      config.json                ← Parámetros exactos del Porsche 911 RSR GTE
+      notas-iracing.md           ← Notas oficiales de iRacing, resumidas por tema
   scripts/
     guardar_setup_ferrari488gte.bat
+  setups-guardados/
+    gte-setup-desk-backup.json   ← Copia exportada desde el botón "Exportar" de la app
 ```
+
+## Notas oficiales de iRacing por coche
+
+Cada carpeta de coche puede tener un archivo `notas-iracing.md` con las
+notas que aporta iRacing sobre ese coche (trim aerodinámico, ARB,
+diferencial, marchas, nomenclatura de setups, etc.), organizadas por tema
+en vez de como texto corrido. Se amplía sesión a sesión: cada vez que haya
+notas nuevas de iRacing para ese coche, se añade contenido nuevo al archivo
+existente sin borrar lo anterior.
 
 ## Cómo añadir un coche nuevo
 
@@ -36,8 +48,8 @@ código para añadir un coche — solo su carpeta y su `config.json`.
 ## Coches actuales
 
 - **Ferrari 488 GTE** — parámetros exactos, tomados de capturas de iRacing.
-- **Porsche 911 RSR GTE** — parámetros aproximados, pendientes de capturas
-  exactas del juego.
+- **Porsche 911 RSR GTE** — parámetros exactos, tomados de capturas de iRacing.
+  Incluye además `notas-iracing.md` con las notas oficiales del coche.
 
 ## Cómo usar la app
 
